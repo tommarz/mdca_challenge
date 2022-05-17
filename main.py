@@ -7,7 +7,7 @@ import sklearn
 from sklearn.svm import OneClassSVM
 from sklearn.metrics import roc_auc_score, precision_score, recall_score, f1_score, accuracy_score
 from sklearn.metrics import confusion_matrix
-from preprocessing import *
+# from preprocessing import *
 
 TRAIN = 5000
 SEG_SIZE = 100
@@ -17,13 +17,13 @@ LABELED_USERS = 10
 
 def load_user_data(dir_path='FraudedRawData'):
     df = pd.DataFrame()
-    for file in os.listdir(dir_path):
-        tmp = pd.read_csv(dir_path + '/' + file, sep=' ', header=None)
+    for i in range(40):
+        tmp = pd.read_csv(dir_path + '/User' + str(i), sep=' ', header=None)
         df = pd.concat([df, tmp], axis=1)
     df = df.T.reset_index(drop=True)
     seg_df = pd.DataFrame()
     for i in range(150):
-        seg_df = pd.concat([seg_df, df.iloc[:, i:i + 100].apply(lambda x: ",".join(x.astype(str)).split(','), axis=1)],
+        seg_df = pd.concat([seg_df, df.iloc[:, i*100:i*100 + 100].apply(lambda x: ",".join(x.astype(str)).split(','), axis=1)],
                            axis=1, names=[str(i)])
     seg_df = seg_df.T.reset_index(drop=True).T
     return df, seg_df
